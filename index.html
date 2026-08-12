@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- viewport：允许用户缩放，但禁止浏览器自动缩放导致布局异常 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <title>青迹 QINGJI ATELIER — 回南天送自由水</title>
+    <meta name="description" content="二流货色Ⅱ青花 · 回南天×自由水 售后专属站点。一瓶记忆的味道，一段心甘情愿的替身，一场未赴的格拉斯之约。">
+    <!-- 外部字体：优雅衬线体用于标题，无衬线用于正文 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Serif+SC:wght@200;300;400;500;600&family=Noto+Sans+SC:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <!-- 样式表 -->
+    <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+
+<!-- ========== 背景音乐（李荣浩《恋人》） ========== -->
+<audio id="bgMusic" loop preload="auto">
+    <source src="assets/lover.mp3" type="audio/mpeg">
+</audio>
+
+<!-- ========== 滚动进度条 ========== -->
+<div id="scrollProgress" class="scroll-progress"></div>
+
+<!-- ========== 音乐播放器（黑胶唱片风格，固定左下角） ========== -->
+<div id="musicPlayer" class="music-player" title="播放/暂停背景音乐">
+    <div class="vinyl-record" id="vinylRecord">
+        <div class="vinyl-grooves"></div>
+        <div class="vinyl-label">
+            <span class="vinyl-title">恋人</span>
+            <span class="vinyl-artist">李荣浩</span>
+        </div>
+        <div class="vinyl-hole"></div>
+    </div>
+    <div class="music-toggle" id="musicToggle">
+        <svg class="icon-play" viewBox="0 0 24 24" width="18" height="18">
+            <path d="M8 5v14l11-7z" fill="currentColor"/>
+        </svg>
+        <svg class="icon-pause" viewBox="0 0 24 24" width="18" height="18">
+            <path d="M6 4h4v16H6zM14 4h4v16h-4z" fill="currentColor"/>
+        </svg>
+    </div>
+    <div class="music-info">
+        <span class="music-info-title">恋人</span>
+        <span class="music-info-artist">李荣浩</span>
+    </div>
+    <div class="music-ripple"></div>
+</div>
+
+<!-- ========== 首次进入音乐提示 ========== -->
+<div id="musicHint" class="music-hint">
+    <button class="music-hint-close" id="musicHintClose" aria-label="关闭提示">×</button>
+    <div class="music-hint-inner">
+        <div class="music-hint-icon">♪</div>
+        <p>轻触屏幕，让《恋人》响起</p>
+        <span>周礼调香时，宋瓷总放这首歌</span>
+    </div>
+</div>
+
+<!-- ========== 加载动画 ========== -->
+<div id="loader" class="loader">
+    <div class="loader-content">
+        <div class="loader-perfume">
+            <div class="perfume-bottle-mini">
+                <div class="bottle-liquid"></div>
+            </div>
+        </div>
+        <p class="loader-text">调香中 · 正在唤醒记忆的味道</p>
+        <div class="loader-bar"><div class="loader-progress" id="loaderProgress"></div></div>
+    </div>
+</div>
+
+<!-- ============ 雨雾画布（回南天氛围） ============ -->
+<canvas id="rainCanvas" class="rain-canvas"></canvas>
+<canvas id="mistCanvas" class="mist-canvas"></canvas>
+<!-- 金色尘埃粒子画布（奢华氛围） -->
+<canvas id="goldCanvas" class="gold-canvas"></canvas>
+<!-- 鼠标跟随光晕 -->
+<div id="cursorGlow" class="cursor-glow"></div>
+
+<!-- ============ 固定导航栏 ============ -->
+<nav id="navbar" class="navbar">
+    <div class="nav-container">
+        <a href="#hero" class="nav-logo">
+            <span class="logo-chinese">青迹</span>
+            <span class="logo-english">QINGJI ATELIER</span>
+        </a>
+        <ul class="nav-menu">
+            <li><a href="#prologue" class="nav-link">缘起</a></li>
+            <li><a href="#timeline" class="nav-link">纪年</a></li>
+            <li><a href="#collection" class="nav-link">藏香</a></li>
+            <li><a href="#grasse" class="nav-link">格拉斯</a></li>
+            <li><a href="#letter" class="nav-link">遗书</a></li>
+        </ul>
+        <div class="nav-toggle" id="navToggle">
+            <span></span><span></span><span></span>
+        </div>
+    </div>
+</nav>
+
+<!-- ============ 英雄区（全屏） ============ -->
+<section id="hero" class="hero">
+    <div class="hero-bg-layer"></div>
+    <div class="hero-content">
+        <!-- 顶部小字标签 -->
+        <div class="hero-tag">
+            <span class="tag-line"></span>
+            <span>二流货色 Ⅱ · 青花</span>
+            <span class="tag-line"></span>
+        </div>
+        <!-- 主标题 -->
+        <h1 class="hero-title">
+            <span class="title-line">回南天</span>
+            <span class="title-divider">送</span>
+            <span class="title-line">自由水</span>
+        </h1>
+        <!-- 副标题/英文 -->
+        <p class="hero-subtitle">The South Wind Brings Free Water</p>
+        <!-- 核心引言（打字机效果） -->
+        <div class="hero-quote">
+            <p id="typewriter" class="quote-text"></p>
+            <span class="quote-cursor">|</span>
+        </div>
+        <!-- 角色署名 -->
+        <div class="hero-credits">
+            <div class="credit-item">
+                <span class="credit-role">回南天</span>
+                <span class="credit-name">周 礼</span>
+                <span class="credit-desc">调香师 · 孤儿院长大 · 心甘情愿的替身</span>
+            </div>
+            <div class="credit-divider">×</div>
+            <div class="credit-item">
+                <span class="credit-role">自由水</span>
+                <span class="credit-name">宋 瓷</span>
+                <span class="credit-desc">宋氏集团执行总裁 · 琥珀中的囚徒 · 后知后觉的爱人</span>
+            </div>
+        </div>
+        <!-- 向下滚动提示 -->
+        <div class="scroll-indicator">
+            <span>向下翻阅</span>
+            <div class="scroll-line"></div>
+        </div>
+    </div>
+    <!-- 香水瓶装饰（纯CSS绘制） -->
+    <div class="hero-perfume-deco">
+        <div class="deco-bottle">
+            <div class="bottle-cap"></div>
+            <div class="bottle-neck"></div>
+            <div class="bottle-body">
+                <div class="bottle-label">
+                    <span class="label-top">QINGJI</span>
+                    <span class="label-mid">痕迹</span>
+                    <span class="label-bottom">EAU DE PARFUM</span>
+                </div>
+                <div class="bottle-liquid-fill">
+                    <div class="liquid-wave"></div>
+                    <span class="bubble b1"></span>
+                    <span class="bubble b2"></span>
+                    <span class="bubble b3"></span>
+                </div>
+                <div class="bottle-shine"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ 缘起 · 序言区 ============ -->
+<section id="prologue" class="prologue">
+    <div class="section-container">
+        <div class="section-header reveal">
+            <span class="section-number">01</span>
+            <h2 class="section-title">缘起 · 第七次试香</h2>
+            <span class="section-english">PROLOGUE · THE SEVENTH ATTEMPT</span>
+        </div>
+        <div class="prologue-content">
+            <div class="prologue-text reveal">
+                <p class="prologue-lead">
+                    宋瓷说，她要一种记忆的味道。
+                </p>
+                <p>
+                    周礼调了六次，每一次都不对。直到第七次，她接过他手中的试香纸，放在鼻尖——喉咙好像被什么东西扼住，鼻腔深处猛地一酸。眼泪流下来时，她自己都没察觉，直到尝到嘴角的咸。
+                </p>
+                <p>
+                    那缕仍在袅袅上升的烟，扭动变幻着，像她记忆中那个逐渐模糊、却始终不肯消散的轮廓。
+                </p>
+                <p class="prologue-highlight">
+                    不是一模一样。但就是那点"像"，那点似是而非的"接近"，精准地刺穿了用五年时间筑起的厚茧。
+                </p>
+            </div>
+            <div class="prologue-visual reveal">
+                <div class="scent-paper">
+                    <div class="paper-strip">
+                        <span class="strip-text">第七次试香 · 试香纸</span>
+                    </div>
+                    <div class="scent-waves">
+                        <span class="wave wave-1"></span>
+                        <span class="wave wave-2"></span>
+                        <span class="wave wave-3"></span>
+                    </div>
+                </div>
+                <div class="prologue-quote-block">
+                    <p class="quote-block-text">
+                        "我需要这香味，像烟鬼需要烟，酒鬼需要酒，像瘾君子需要毒品。"
+                    </p>
+                    <span class="quote-block-author">—— 宋瓷</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ 纪年 · 故事时间线 ============ -->
+<section id="timeline" class="timeline">
+    <div class="section-container">
+        <div class="section-header reveal">
+            <span class="section-number">02</span>
+            <h2 class="section-title">纪年 · 一瓶香的一生</h2>
+            <span class="section-english">CHRONICLE · THE LIFE OF A SCENT</span>
+        </div>
+
+        <div class="timeline-container">
+            <!-- 时间线竖线 -->
+            <div class="timeline-line"></div>
+
+            <!-- 节点1 -->
+            <div class="timeline-item reveal" data-side="left">
+                <div class="timeline-dot"></div>
+                <div class="timeline-card">
+                    <span class="timeline-year">第一章</span>
+                    <h3 class="timeline-title">雇佣</h3>
+                    <p class="timeline-text">
+                        宋氏集团执行总裁走进一间破旧的调香工作室。她要一种记忆的味道，付给一个孤儿院长大的调香师一笔不菲的佣金。周礼接过委托，没有问那个人是谁。
+                    </p>
+                    <p class="timeline-text timeline-quote">
+                        "你制香多久了？""十一年。""和谁学的？""孤儿院的一位老师。他已经去世了。"
+                    </p>
+                </div>
+            </div>
+
+            <!-- 节点2 -->
+            <div class="timeline-item reveal" data-side="right">
+                <div class="timeline-dot"></div>
+                <div class="timeline-card">
+                    <span class="timeline-year">第二章</span>
+                    <h3 class="timeline-title">替身</h3>
+                    <p class="timeline-text">
+                        她开始让他穿陈屿的衣服，告诉他陈屿爱什么、讨厌什么、喜欢什么电影、睡觉时习惯侧哪边。周礼安静地听，从不问问题。陈屿的随意是骨子里的，周礼的克制也是骨子里的，但她假装不知道。
+                    </p>
+                    <p class="timeline-text timeline-quote">
+                        "扣子可以解开。""好。""还是不对。"
+                    </p>
+                </div>
+            </div>
+
+            <!-- 节点3 -->
+            <div class="timeline-item reveal" data-side="left">
+                <div class="timeline-dot"></div>
+                <div class="timeline-card">
+                    <span class="timeline-year">第三章</span>
+                    <h3 class="timeline-title">痕迹</h3>
+                    <p class="timeline-text">
+                        周礼调出了一瓶新的香。"这不像他。""我知道。这是你。"后来又一瓶："这不像他。""也不像你。""那像谁？""像我。"他决定离开。一个影子决定离开光源时，它拉长、变淡的过程里，有一种决绝的自重。
+                    </p>
+                    <p class="timeline-text timeline-quote">
+                        "你看，影子没有实体，但他能告诉你光的方向。"
+                    </p>
+                </div>
+            </div>
+
+            <!-- 节点4 -->
+            <div class="timeline-item reveal" data-side="right">
+                <div class="timeline-dot"></div>
+                <div class="timeline-card">
+                    <span class="timeline-year">第四章</span>
+                    <h3 class="timeline-title">渴</h3>
+                    <p class="timeline-text">
+                        他走后，她把自己活成了一颗精美的琥珀。很好看，但是死的。心理医生问她最近失去了什么，"就像杯子失去了水。"她说是她把杯子打碎了，然后发现——渴。宋氏集团以个人名义赞助了一个独立调香项目，指定周礼主导。没有附加条件。
+                    </p>
+                    <p class="timeline-text timeline-quote">
+                        "那瓶香，你最后给我的那瓶，我闻过了。""是吗，这说明它完成了它的使命。""什么使命？""作为一瓶香水的使命。"
+                    </p>
+                </div>
+            </div>
+
+            <!-- 节点5 -->
+            <div class="timeline-item reveal" data-side="left">
+                <div class="timeline-dot"></div>
+                <div class="timeline-card">
+                    <span class="timeline-year">第五章</span>
+                    <h3 class="timeline-title">承认</h3>
+                    <p class="timeline-text">
+                        她把陈屿的东西捐了。那个空间应该空着，或者装上别的东西。"捐掉那些东西的时候，疼吗？""疼。""那就好，知道疼，说明还活着。"他们终于承认彼此都在用错误的方式治愈自己的残缺。她用他填洞，他用"被需要"填洞。
+                    </p>
+                    <p class="timeline-text timeline-quote">
+                        "我要那个洞里装的不是他的影子，而是和我有关的、好的坏的、所有的记忆。哪怕最后还是会漏风，但那风里，也必须带着我周礼的味道。"
+                    </p>
+                </div>
+            </div>
+
+            <!-- 节点6 -->
+            <div class="timeline-item reveal" data-side="right">
+                <div class="timeline-dot"></div>
+                <div class="timeline-card">
+                    <span class="timeline-year">第六章</span>
+                    <h3 class="timeline-title">青迹</h3>
+                    <p class="timeline-text">
+                        宋父谋杀周礼失败。宋瓷举证宋氏违法，集团破产，父母入狱。他找了她很久。她一无所有了。但她以个人名义投资的调香项目还在运行，一直在盈利。他把它带来了——属于她一个人的。他们开了一间工作室，叫"青迹"，在一条老街上。
+                    </p>
+                    <p class="timeline-text timeline-quote">
+                        "我们一起做点事吧，让过去有个安放的地方，让那些疼的、苦的、失去的，都变成我们向前的力量。"
+                    </p>
+                </div>
+            </div>
+
+            <!-- 节点7 -->
+            <div class="timeline-item reveal" data-side="left">
+                <div class="timeline-dot"></div>
+                <div class="timeline-card">
+                    <span class="timeline-year">第七章</span>
+                    <h3 class="timeline-title">暖</h3>
+                    <p class="timeline-text">
+                        白天开店，晚上搬砖，凌晨调香。她找到他时，他正在吃馒头就着白开水。"我也可以打工。""不用。你好好经营工作室。那是你的战场。""那你的战场呢？"他指了指自己的心口，又指了指她。她已经很久没有想起陈屿了。不是忘记，是他终于变成了一个过去的人。
+                    </p>
+                    <p class="timeline-text timeline-quote">
+                        "等以后有钱了，我们换个大点的房子吧，要有整面墙的书架，还有你的钢琴。""我不需要大房子。""我需要。我想给你最好的。"
+                    </p>
+                </div>
+            </div>
+
+            <!-- 节点8 -->
+            <div class="timeline-item reveal" data-side="right">
+                <div class="timeline-dot timeline-dot-final"></div>
+                <div class="timeline-card timeline-card-final">
+                    <span class="timeline-year">终章</span>
+                    <h3 class="timeline-title">格拉斯的春天</h3>
+                    <p class="timeline-text">
+                        他说，我们去一趟普罗旺斯的格拉斯吧。世界香水之都。到时候给你编一个薰衣草花环。宋哲找到了他们。枪声响起的时候，周礼猛地往前扑，手伸出去，想要抓住那只握枪的手。"别怕。"这是他说的最后两个字。
+                    </p>
+                    <p class="timeline-text timeline-quote">
+                        格拉斯小镇的春天来得比想象中更早。她买下了一座废弃的石屋，接下来的日子，一个人打扫。她抱着他的遗像坐在壁炉前，火光在脸上跳跃，把影子投在身后的墙上，很长，很孤独。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ 藏香 · 香水系列 ============ -->
+<section id="collection" class="collection">
+    <div class="section-container">
+        <div class="section-header reveal">
+            <span class="section-number">03</span>
+            <h2 class="section-title">藏香 · 五瓶未寄出的香</h2>
+            <span class="section-english">COLLECTION · FIVE UNSENT BOTTLES</span>
+        </div>
+        <p class="collection-intro reveal">
+            周礼生前留下了五瓶未命名的香水。每一瓶都是一段他不曾说出口的话。<br>
+            以下为青迹工作室根据他的配方手稿复原、并代为命名的版本。
+        </p>
+
+        <div class="perfume-grid">
+            <!-- 香水1 -->
+            <div class="perfume-card reveal" data-perfume="1">
+                <div class="perfume-bottle">
+                    <div class="bottle-cap-sm"></div>
+                    <div class="bottle-body-sm liquid-amber">
+                        <div class="sm-liquid-wave"></div>
+                        <span class="bottle-num">N°01</span>
+                        <div class="sm-bottle-shine"></div>
+                    </div>
+                </div>
+                <div class="perfume-info">
+                    <h3 class="perfume-name">第七次</h3>
+                    <span class="perfume-english">THE SEVENTH</span>
+                    <p class="perfume-notes">前调：雨水 · 旧书页<br>中调：雪松 · 白衬衫<br>后调：皮肤温度 · 未说出口的名字</p>
+                    <p class="perfume-desc">那一点似是而非的"接近"，刺穿了五年的厚茧。她哭了，他知道，自己终于调出了正确的错误。</p>
+                </div>
+            </div>
+
+            <!-- 香水2 -->
+            <div class="perfume-card reveal" data-perfume="2">
+                <div class="perfume-bottle">
+                    <div class="bottle-cap-sm"></div>
+                    <div class="bottle-body-sm liquid-teal">
+                        <div class="sm-liquid-wave"></div>
+                        <span class="bottle-num">N°02</span>
+                        <div class="sm-bottle-shine"></div>
+                    </div>
+                </div>
+                <div class="perfume-info">
+                    <h3 class="perfume-name">痕迹</h3>
+                    <span class="perfume-english">TRACES</span>
+                    <p class="perfume-notes">前调：苦橙 · 离别<br>中调：焚香 · 空房间<br>后调：影子拉长的方向 · 决绝的自重</p>
+                    <p class="perfume-desc">这不像他，也不像你。那像谁？像我。这是他第一次，在香水里写下了自己的名字。</p>
+                </div>
+            </div>
+
+            <!-- 香水3 -->
+            <div class="perfume-card reveal" data-perfume="3">
+                <div class="perfume-bottle">
+                    <div class="bottle-cap-sm"></div>
+                    <div class="bottle-body-sm liquid-rose">
+                        <div class="sm-liquid-wave"></div>
+                        <span class="bottle-num">N°03</span>
+                        <div class="sm-bottle-shine"></div>
+                    </div>
+                </div>
+                <div class="perfume-info">
+                    <h3 class="perfume-name">青迹</h3>
+                    <span class="perfume-english">QINGJI</span>
+                    <p class="perfume-notes">前调：老街晨雾 · 馒头热气<br>中调：工地灰尘 · 调香台木屑<br>后调：两只交握的手 · 你的战场在这里</p>
+                    <p class="perfume-desc">工作室开在老街上的那一天。他白天开店，晚上搬砖，凌晨调香。这瓶香里，有他全部的温柔。</p>
+                </div>
+            </div>
+
+            <!-- 香水4 -->
+            <div class="perfume-card reveal" data-perfume="4">
+                <div class="perfume-bottle">
+                    <div class="bottle-cap-sm"></div>
+                    <div class="bottle-body-sm liquid-lavender">
+                        <div class="sm-liquid-wave"></div>
+                        <span class="bottle-num">N°04</span>
+                        <div class="sm-bottle-shine"></div>
+                    </div>
+                </div>
+                <div class="perfume-info">
+                    <h3 class="perfume-name">格拉斯的花环</h3>
+                    <span class="perfume-english">WREATH OF GRASSE</span>
+                    <p class="perfume-notes">前调：薰衣草田 · 南法阳光<br>中调：石屋壁炉 · 未编完的花环<br>后调：一张机票 · 一个永远到不了的春天</p>
+                    <p class="perfume-desc">他说要给她编一个薰衣草花环。这瓶香是他提前调好的，本来打算到了格拉斯再送给她。</p>
+                </div>
+            </div>
+
+            <!-- 香水5 -->
+            <div class="perfume-card reveal" data-perfume="5">
+                <div class="perfume-bottle">
+                    <div class="bottle-cap-sm"></div>
+                    <div class="bottle-body-sm liquid-ink">
+                        <div class="sm-liquid-wave"></div>
+                        <span class="bottle-num">N°05</span>
+                        <div class="sm-bottle-shine"></div>
+                    </div>
+                </div>
+                <div class="perfume-info">
+                    <h3 class="perfume-name">别怕</h3>
+                    <span class="perfume-english">DON'T BE AFRAID</span>
+                    <p class="perfume-notes">前调：枪声 · 碎玻璃<br>中调：血 · 最后一次拥抱的温度<br>后调：壁炉火光 · 很长很孤独的影子 · 我想给你最好的</p>
+                    <p class="perfume-desc">他最后说的两个字。这瓶香没有配方，是青迹工作室根据他所有手稿的余韵调和而成。闻起来，像一个人用尽了全部力气。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ 格拉斯 · 未赴之约 ============ -->
+<section id="grasse" class="grasse">
+    <div class="grasse-bg"></div>
+    <div class="section-container">
+        <div class="grasse-content reveal">
+            <div class="grasse-header">
+                <span class="section-number">04</span>
+                <h2 class="section-title light">格拉斯 · 未赴之约</h2>
+                <span class="section-english light">GRASSE · THE PROMISE UNKEPT</span>
+            </div>
+            <div class="grasse-text">
+                <p>
+                    格拉斯，法国南部的小镇，世界香水之都。漫山遍野的薰衣草，五月的玫瑰，十月的茉莉。每一个调香师都梦想去的地方。
+                </p>
+                <p>
+                    他说："我们去一趟普罗旺斯的格拉斯吧。"<br>
+                    她说："好，听说那里的薰衣草也很好看。"<br>
+                    他说："到时候去看看，我给你编一个花环。"
+                </p>
+                <p class="grasse-highlight">
+                    现在，她一个人坐在格拉斯废弃石屋的壁炉前。<br>
+                    窗外是漫山的薰衣草，手里是他的遗像。<br>
+                    花环永远不会编完了。
+                </p>
+                <div class="grasse-lavender">
+                    <span class="lavender-stem"></span>
+                    <span class="lavender-stem"></span>
+                    <span class="lavender-stem"></span>
+                    <span class="lavender-stem"></span>
+                    <span class="lavender-stem"></span>
+                    <span class="lavender-stem"></span>
+                    <span class="lavender-stem"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ 遗书 · 情感长文 ============ -->
+<section id="letter" class="letter">
+    <div class="section-container">
+        <div class="section-header reveal">
+            <span class="section-number">05</span>
+            <h2 class="section-title">遗书 · 周礼未寄出的信</h2>
+            <span class="section-english">THE UNSENT LETTER</span>
+        </div>
+
+        <div class="letter-container reveal">
+            <!-- 信纸装饰 -->
+            <div class="letter-paper">
+                <div class="letter-header-deco">
+                    <span class="letter-date">写于青迹工作室 · 某个凌晨三点</span>
+                    <span class="letter-to">致 宋瓷</span>
+                </div>
+
+                <div class="letter-body">
+                    <p>宋瓷：</p>
+
+                    <p>写这封信的时候，你在隔壁房间睡着了。我调完了今天最后一批香，手上还沾着雪松和苦橙的味道。我想了很久要不要写，因为我知道你看到这封信的时候，大概已经是我不在了的时候。但我还是写了。有些话，如果不趁着还能说的时候说，就永远说不了了。</p>
+
+                    <p>我第一次见你的时候，你穿着一身黑色的西装，站在我那个破工作室的门口，像一颗不会融化的冰。你说你要一种记忆的味道。我没有问那个人是谁，因为我从你的眼睛里看出来了——那是一种失去了什么东西之后，拼命想要抓住一点什么的眼神。我太熟悉那种眼神了，孤儿院的每个孩子都有。</p>
+
+                    <p>你知道我为什么接受那份委托吗？不是因为钱。是因为你说"我需要"的时候，我心里有个地方亮了一下。孤儿院的孩子从小就学的一件事，就是如何"被需要"。被需要，就有留下的理由。哪怕那种需要是扭曲的，是建立在另一个人缺席的基础上的。你用我来填你的空洞，而我也在用"被你需要"来填我的空洞。我们两个，其实是一样的人。</p>
+
+                    <p>我知道你在我身上找的是谁。我知道你抚摸我脸的时候，想的是另一个人的温度。我知道你让我穿他的衣服的时候，心里在比较什么。我都知道。但我没有走。因为哪怕只是替身，哪怕你看我的眼神里映着我的脸、看的却是另一个人，我也愿意。因为在那些时刻里，你是需要我的。而被你需要，是我活了二十多年里，最接近"被爱"的感觉。</p>
+
+                    <p>后来我调了那瓶叫"痕迹"的香。我说那像我。你知道我鼓起了多大勇气吗？那是我第一次，在你面前，不想做任何人的替身。我想让你闻到我——周礼，不是陈屿的影子，不是你记忆的止痛药，就是我。一个孤儿院长大的、会调香的、手很凉的、喜欢你的人。</p>
+
+                    <p>我走的那段时间，每天都在调香。调出来的全是苦的，像毒药。直到我看到宋氏破产的消息，看到你父母入狱。那一刻我突然明白，我不能再沉沦下去了。因为还有一个人，比我更痛，更需要被找到。我找了你很久。你说你一无所有了，不配我来找你。但你忘了，你以个人名义投的那个项目，合同签的是你的名字。那是你的。不是宋家的，不是任何人的，只是宋瓷的。我把它带来了，因为我想让你知道，你从来都不是一无所有。</p>
+
+                    <p>开青迹的那段日子，是我这辈子最开心的时候。白天开店，晚上搬砖，凌晨调香。你找到我的时候，我正在吃馒头就白开水。你哭了，我那时候想，这个人怎么连哭都这么好看。我说你的战场是工作室，我的战场在这里——我指了指自己的心口，又指了指你。你可能不知道，我说那句话的时候，心里在想什么。我在想：周礼，你终于有一个家了。</p>
+
+                    <p>我开始能睡着觉了。以前在孤儿院，总是睡不踏实，总觉得第二天醒来就会被送走。但和你在一起之后，我能一觉睡到天亮了。因为我知道，醒来的时候，你会在。你的手很暖，比我记忆里任何一个人的手都暖。我以前总觉得自己的手凉是因为体质，后来才知道，是因为从来没有人握着它。</p>
+
+                    <p>我说要带你去格拉斯。其实我偷偷查了很多攻略，订了机票，甚至查了那里哪一家花店的薰衣草花环编得最好。我想给你编一个，不是因为你喜欢薰衣草，是因为我想让你戴着我编的花环，站在花田里笑一次。不是那种礼貌的、克制的笑，是那种真正的、从心底里涌上来的笑。我想看看那个样子的你。</p>
+
+                    <p>宋瓷，我想跟你说，不要怪自己。你没有做错什么。失去一个人的疼，像身体里永远有一个地方在漏风，怎么填都填不满。你用我来填，不是因为你坏，是因为你太疼了。而我愿意被你用，不是因为我贱，是因为我太想被你需要了。我们都在用错误的方式试图治愈自己的残缺，但那又怎么样呢？至少我们遇见了彼此。至少在那些错误的日子里，我们真的温暖过对方。</p>
+
+                    <p>后来我们终于放下了，终于决定以周礼和宋瓷的身份重新开始。你知道那天我有多开心吗？我回到工作室，调了一瓶新的香，没有前调中调后调，就是一股很干净的、像刚下过雨的空气的味道。我给它起名叫"我们"。那瓶香现在应该还在工作室的柜子里，最里面那一层。如果你找到了，不要闻。因为那是我最私人的一瓶，里面装的全是我对你的贪心。</p>
+
+                    <p>如果我不在了，你要好好吃饭。不要用工作填满所有时间，那不是止痛药，那是慢性自杀。你要好好睡觉，如果做噩梦了，就把灯打开，告诉自己那只是梦。你要继续经营青迹，那是我们一起做的事，不能让它倒了。你要去格拉斯，替我去看看那片薰衣草田，替我编一个花环，替我在花田里笑一次。</p>
+
+                    <p>不要一直想着我。我知道这句话说出来很残忍，但我还是要说。因为我希望你能好好活着，不是为了我，是为了你自己。你已经为别人活了太久了——为陈屿的记忆活，为宋家的期望活，为我的离开活。现在，为宋瓷活一次吧。做你自己想做的事，去你自己想去的地方，爱你自己想爱的人。如果有一天，你遇到了一个能让你笑的人，不要因为我而拒绝。我不会介意的。我只介意你不开心。</p>
+
+                    <p>但如果你实在忘不掉我，那就记着吧。记着有一个人，心甘情愿做了你的替身，记着有一个人，在工地搬砖的时候还在想今天给你调什么香，记着有一个人，最后扑向枪口的时候，脑子里想的不是疼，是"还好，她没事"。记着这些，然后好好活着。</p>
+
+                    <p>我最后说的两个字是"别怕"。不是因为我不怕，是因为我不想让你怕。我这辈子最怕的事情，就是你怕。你怕失去，怕孤独，怕自己不值得被爱。但宋瓷，你值得。你值得所有最好的东西，值得一间开满花的房子，值得一整面墙的书架，值得一架钢琴，值得一个会给你编花环的人。我本来想做那个人的。但如果做不了了，就请你替我，把这些都给自己。</p>
+
+                    <p>对了，那瓶叫"别怕"的香，没有配方。因为它不是调出来的，是我所有手稿里剩下的余韵，混在一起的味道。闻起来可能有点苦，有点涩，还有点暖。就像我这个人一样。如果你闻到了，不要哭。那是我在抱你。</p>
+
+                    <p>宋瓷，我爱你。不是作为替身的爱，不是作为被需要者的爱，是周礼爱宋瓷的爱。很慢，很笨，很心甘情愿。但很真。</p>
+
+                    <p>如果有下辈子，我还做调香师。还在那个破工作室里等你推门进来。还心甘情愿做你的替身。还在工地搬砖的时候想你。还说要带你去格拉斯。还在最后扑向枪口。</p>
+
+                    <p>因为是你。所以都值得。</p>
+
+                    <p class="letter-signoff">周礼<br>写于你睡着的某个凌晨<br>墨水迹有点晕，是因为手在抖<br>不是因为冷，是因为太想你了</p>
+                </div>
+
+                <!-- 信纸底部装饰 -->
+                <div class="letter-footer-deco">
+                    <div class="wax-seal">
+                        <span class="seal-text">青迹</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ 尾声 · 最终寄语 ============ -->
+<section class="epilogue">
+    <div class="section-container">
+        <div class="epilogue-content reveal">
+            <p class="epilogue-quote">
+                "我知道你浅薄如锈铁，但我仍走向你。<br>
+                我知道你灵魂有缺口，但我仍走向你。<br>
+                我明白你眼里的渴求，知晓你双手捧着的野心，<br>
+                但我仍走向你。"
+            </p>
+            <p class="epilogue-text">
+                爱，是我们共谋的那场窒息，是亲手为彼此戴上的枷锁。<br>
+                但如果再来一次，我还是会走向你。<br>
+                心甘情愿。
+            </p>
+            <div class="epilogue-sign">
+                <span>—— 二流货色 Ⅱ · 青花 ——</span>
+                <span>回南天 × 自由水 售后专属</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ 页脚 ============ -->
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-brand">
+            <span class="footer-logo">青迹 QINGJI ATELIER</span>
+            <p class="footer-tagline">一瓶记忆的味道 · 一段心甘情愿的替身 · 一场未赴的格拉斯之约</p>
+        </div>
+        <div class="footer-links">
+            <div class="footer-col">
+                <h4>导航</h4>
+                <a href="#prologue">缘起</a>
+                <a href="#timeline">纪年</a>
+                <a href="#collection">藏香</a>
+                <a href="#grasse">格拉斯</a>
+                <a href="#letter">遗书</a>
+            </div>
+            <div class="footer-col">
+                <h4>关于</h4>
+                <span>本网站为剧本杀《二流货色Ⅱ：青花》同人售后创作</span>
+                <span>角色版权归原作者言先生及发行方所有</span>
+                <span>仅作情感延伸与玩家交流用途</span>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 青迹 QINGJI ATELIER · 回南天送自由水</span>
+            <span class="icp-number">
+                <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">京ICP备2026047203号-1</a>
+            </span>
+            <span>主办单位：王悦</span>
+        </div>
+    </div>
+</footer>
+
+<!-- ============ 返回顶部按钮 ============ -->
+<button id="backToTop" class="back-to-top" aria-label="返回顶部">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M12 19V5M5 12l7-7 7 7"/>
+    </svg>
+</button>
+
+<!-- ============ 脚本 ============ -->
+<script src="script.js?v=3"></script>
+</body>
+</html>

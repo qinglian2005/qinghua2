@@ -1,0 +1,2864 @@
+/* ============================================================
+   青迹 QINGJI ATELIER — 回南天送自由水 售后网站
+   样式表 style.css
+   设计理念：回南天的潮湿氤氲 × 高端调香工作室的奢华克制
+   主色调：墨蓝夜色 + 雾青 + 暖琥珀金 + 奶油白
+   ============================================================ */
+
+/* ========== 1. CSS变量与设计令牌 ========== */
+:root {
+    /* 主色板 */
+    --color-ink-deep: #080f1a;       /* 最深的墨蓝，用于背景 */
+    --color-ink: #0d1b2a;            /* 墨蓝，主背景 */
+    --color-ink-light: #162638;      /* 浅墨蓝，卡片背景 */
+    --color-mist: #1b3a4b;           /* 雾青，回南天氛围 */
+    --color-mist-light: #2d5a6b;     /* 浅雾青 */
+    --color-amber: #c9a96e;          /* 琥珀金，主强调色 */
+    --color-amber-light: #e8c98a;    /* 浅琥珀 */
+    --color-amber-deep: #a8894f;     /* 深琥珀 */
+    --color-gold: #d4af37;           /* 金色，装饰 */
+    --color-cream: #f5f0e8;          /* 奶油白，正文亮色背景 */
+    --color-cream-dark: #e8e0d4;     /* 深奶油 */
+    --color-rose: #a67b7b;           /* 灰玫瑰，点缀 */
+    --color-lavender: #9b8bb5;       /* 薰衣草紫，格拉斯区 */
+    --color-lavender-deep: #6b5b8e;  /* 深薰衣草 */
+
+    /* 文字色 */
+    --text-primary: #f5f0e8;         /* 主文字（深色背景上） */
+    --text-secondary: #b8c4d0;       /* 次要文字 */
+    --text-muted: #7a8a9a;           /* 弱化文字 */
+    --text-dark: #1a2a3a;            /* 深色文字（浅色背景上） */
+    --text-dark-secondary: #4a5a6a;  /* 深色次要文字 */
+
+    /* 玻璃拟态 */
+    --glass-bg: rgba(13, 27, 42, 0.6);
+    --glass-border: rgba(201, 169, 110, 0.2);
+    --glass-blur: blur(20px);
+
+    /* 字体 */
+    --font-serif: 'Cormorant Garamond', 'Noto Serif SC', serif;
+    --font-chinese: 'Noto Serif SC', serif;
+    --font-sans: 'Noto Sans SC', sans-serif;
+
+    /* 间距 */
+    --section-padding: 120px 0;
+    --container-width: 1200px;
+
+    /* 过渡 */
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.2s ease;
+
+    /* 阴影 */
+    --shadow-luxury: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(201, 169, 110, 0.05);
+    --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.3);
+    --shadow-glow: 0 0 30px rgba(201, 169, 110, 0.15);
+}
+
+/* ========== 2. 重置与基础样式 ========== */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+    /* 禁止 iOS 自动调整文字大小 */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--color-ink);
+    color: var(--text-primary);
+    line-height: 1.8;
+    /* 修复手机端横向溢出：在 body 上禁止横向滚动 */
+    overflow-x: hidden;
+    /* 确保 body 不会被子元素的 transform 撑宽 */
+    width: 100%;
+    max-width: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--color-ink-deep);
+}
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--color-amber-deep), var(--color-amber));
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-amber-light);
+}
+
+/* 选中文字样式 */
+::selection {
+    background: rgba(201, 169, 110, 0.3);
+    color: var(--color-cream);
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+/* 全局防溢出：确保所有媒体和容器不超过视口宽度 */
+video, canvas, svg, iframe {
+    max-width: 100%;
+}
+
+/* 防止 flex/grid 子项内容撑破容器 */
+.section-container,
+.letter-container,
+.timeline-container,
+.perfume-grid,
+.prologue-content,
+.grasse-content,
+.footer-content {
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+/* ========== 3. 通用容器与标题 ========== */
+.section-container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.section-number {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 0.85rem;
+    letter-spacing: 6px;
+    color: var(--color-amber);
+    margin-bottom: 16px;
+    font-style: italic;
+}
+
+.section-title {
+    font-family: var(--font-chinese);
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    letter-spacing: 4px;
+}
+
+.section-title.light {
+    color: var(--text-primary);
+}
+
+.section-english {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 0.8rem;
+    letter-spacing: 4px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-style: italic;
+}
+
+.section-english.light {
+    color: rgba(245, 240, 232, 0.5);
+}
+
+/* ========== 4. 加载动画 ========== */
+.loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-ink-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.loader.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader-content {
+    text-align: center;
+}
+
+/* 迷你香水瓶 */
+.perfume-bottle-mini {
+    width: 40px;
+    height: 70px;
+    margin: 0 auto 24px;
+    position: relative;
+}
+
+.perfume-bottle-mini::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 10px;
+    background: var(--color-amber);
+    border-radius: 2px 2px 0 0;
+}
+
+.perfume-bottle-mini::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 8px;
+    background: var(--color-amber-deep);
+}
+
+.bottle-liquid {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(180deg, rgba(201, 169, 110, 0.3), var(--color-amber));
+    border-radius: 6px 6px 10px 10px;
+    border: 1px solid var(--color-amber);
+    animation: liquidWave 2s ease-in-out infinite;
+}
+
+@keyframes liquidWave {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.85); }
+}
+
+.loader-text {
+    font-family: var(--font-chinese);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+}
+
+.loader-bar {
+    width: 200px;
+    height: 1px;
+    background: rgba(201, 169, 110, 0.2);
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.loader-progress {
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-amber-deep), var(--color-amber-light));
+    transition: width 0.3s ease;
+}
+
+/* ========== 5. 雨雾画布 ========== */
+.rain-canvas, .mist-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.rain-canvas {
+    z-index: 2;
+    opacity: 0.6;
+}
+
+.mist-canvas {
+    z-index: 1;
+    opacity: 0.4;
+}
+
+/* 所有内容层级高于画布 */
+.navbar, section, .footer, .back-to-top {
+    position: relative;
+    z-index: 3;
+}
+
+/* ========== 6. 导航栏 ========== */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 0;
+    z-index: 100;
+    transition: var(--transition-smooth);
+    background: transparent;
+}
+
+.navbar.scrolled {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 14px 0;
+}
+
+.nav-container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-logo {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.logo-chinese {
+    font-family: var(--font-chinese);
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--color-cream);
+    letter-spacing: 6px;
+}
+
+.logo-english {
+    font-family: var(--font-serif);
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    color: var(--color-amber);
+    text-transform: uppercase;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 40px;
+}
+
+.nav-link {
+    font-family: var(--font-chinese);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    letter-spacing: 2px;
+    position: relative;
+    padding: 4px 0;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--color-amber);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--color-amber-light);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* 移动端菜单按钮 */
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.nav-toggle span {
+    width: 24px;
+    height: 1px;
+    background: var(--color-cream);
+    transition: var(--transition-fast);
+}
+
+/* ========== 7. 英雄区 ========== */
+.hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.hero-bg-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(ellipse at 30% 20%, rgba(27, 58, 75, 0.4) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(201, 169, 110, 0.08) 0%, transparent 50%),
+        linear-gradient(180deg, var(--color-ink-deep) 0%, var(--color-ink) 50%, var(--color-ink-light) 100%);
+    z-index: 0;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 0 40px;
+    max-width: 900px;
+}
+
+.hero-tag {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 40px;
+    font-family: var(--font-serif);
+    font-size: 0.8rem;
+    letter-spacing: 4px;
+    color: var(--color-amber);
+    text-transform: uppercase;
+}
+
+.tag-line {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-amber), transparent);
+}
+
+.hero-title {
+    font-family: var(--font-chinese);
+    font-size: 4.5rem;
+    font-weight: 200;
+    color: var(--color-cream);
+    margin-bottom: 16px;
+    letter-spacing: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.title-line {
+    position: relative;
+}
+
+.title-divider {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    font-style: italic;
+    color: var(--color-amber);
+    font-weight: 300;
+}
+
+.hero-subtitle {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--text-muted);
+    letter-spacing: 3px;
+    margin-bottom: 50px;
+}
+
+.hero-quote {
+    margin-bottom: 50px;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quote-text {
+    font-family: var(--font-chinese);
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+    letter-spacing: 2px;
+    line-height: 2;
+    max-width: 700px;
+}
+
+.quote-cursor {
+    color: var(--color-amber);
+    animation: blink 1s step-end infinite;
+    font-weight: 200;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.hero-credits {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+}
+
+.credit-item {
+    text-align: center;
+}
+
+.credit-role {
+    display: block;
+    font-family: var(--font-chinese);
+    font-size: 0.85rem;
+    color: var(--color-amber);
+    letter-spacing: 3px;
+    margin-bottom: 4px;
+}
+
+.credit-name {
+    display: block;
+    font-family: var(--font-chinese);
+    font-size: 1.5rem;
+    color: var(--color-cream);
+    letter-spacing: 8px;
+    margin-bottom: 6px;
+    font-weight: 300;
+}
+
+.credit-desc {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    max-width: 220px;
+}
+
+.credit-divider {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--color-amber);
+    font-style: italic;
+}
+
+/* 向下滚动提示 */
+.scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.scroll-indicator span {
+    font-family: var(--font-serif);
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(180deg, var(--color-amber), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+    0%, 100% { transform: scaleY(1); opacity: 1; }
+    50% { transform: scaleY(0.5); opacity: 0.5; }
+}
+
+/* 英雄区香水瓶装饰 */
+.hero-perfume-deco {
+    position: absolute;
+    right: 8%;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    opacity: 0.15;
+    animation: bottleFloat 6s ease-in-out infinite;
+}
+
+@keyframes bottleFloat {
+    0%, 100% { transform: translateY(-50%) rotate(-2deg); }
+    50% { transform: translateY(-52%) rotate(2deg); }
+}
+
+.deco-bottle {
+    width: 120px;
+    height: 280px;
+    position: relative;
+}
+
+.bottle-cap {
+    width: 40px;
+    height: 30px;
+    background: linear-gradient(180deg, var(--color-amber-light), var(--color-amber-deep));
+    margin: 0 auto;
+    border-radius: 4px 4px 0 0;
+    position: relative;
+}
+
+.bottle-cap::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 8px;
+    background: var(--color-amber-deep);
+    border-radius: 2px;
+}
+
+.bottle-neck {
+    width: 30px;
+    height: 25px;
+    background: rgba(201, 169, 110, 0.2);
+    margin: 0 auto;
+    border: 1px solid rgba(201, 169, 110, 0.3);
+}
+
+.bottle-body {
+    width: 120px;
+    height: 210px;
+    background: linear-gradient(135deg, rgba(201, 169, 110, 0.1), rgba(27, 58, 75, 0.3));
+    border: 1px solid rgba(201, 169, 110, 0.3);
+    border-radius: 10px 10px 20px 20px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(4px);
+}
+
+.bottle-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 80%;
+}
+
+.label-top {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    color: var(--color-amber);
+}
+
+.label-mid {
+    display: block;
+    font-family: var(--font-chinese);
+    font-size: 1.3rem;
+    color: var(--color-cream);
+    letter-spacing: 6px;
+    margin: 6px 0;
+}
+
+.label-bottom {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 0.5rem;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+}
+
+.bottle-liquid-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 65%;
+    background: linear-gradient(180deg, rgba(201, 169, 110, 0.2), rgba(201, 169, 110, 0.4));
+    border-radius: 0 0 20px 20px;
+}
+
+/* ========== 8. 缘起 · 序言区 ========== */
+.prologue {
+    padding: var(--section-padding);
+    background: linear-gradient(180deg, var(--color-ink-light) 0%, var(--color-ink) 100%);
+}
+
+.prologue-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+}
+
+.prologue-text p {
+    font-family: var(--font-chinese);
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 2.2;
+    margin-bottom: 20px;
+    font-weight: 300;
+}
+
+.prologue-lead {
+    font-size: 1.3rem !important;
+    color: var(--color-cream) !important;
+    font-weight: 400 !important;
+    letter-spacing: 2px;
+}
+
+.prologue-highlight {
+    color: var(--color-amber-light) !important;
+    font-style: italic;
+    border-left: 2px solid var(--color-amber);
+    padding-left: 20px;
+    margin-top: 30px !important;
+}
+
+/* 试香纸视觉 */
+.prologue-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+.scent-paper {
+    position: relative;
+    width: 200px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.paper-strip {
+    width: 50px;
+    height: 220px;
+    background: linear-gradient(180deg, var(--color-cream), var(--color-cream-dark));
+    border-radius: 4px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 16px;
+    box-shadow: var(--shadow-card);
+    transform: rotate(-3deg);
+    position: relative;
+    z-index: 2;
+}
+
+.strip-text {
+    font-family: var(--font-chinese);
+    font-size: 0.6rem;
+    color: var(--text-dark-secondary);
+    writing-mode: vertical-rl;
+    letter-spacing: 2px;
+}
+
+.scent-waves {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 100px;
+}
+
+.wave {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid rgba(201, 169, 110, 0.3);
+    border-radius: 50%;
+    animation: scentRise 3s ease-out infinite;
+}
+
+.wave-1 { width: 30px; height: 30px; animation-delay: 0s; }
+.wave-2 { width: 30px; height: 30px; animation-delay: 1s; }
+.wave-3 { width: 30px; height: 30px; animation-delay: 2s; }
+
+@keyframes scentRise {
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0.8; }
+    100% { transform: translate(-50%, -150%) scale(2); opacity: 0; }
+}
+
+.prologue-quote-block {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    padding: 30px;
+    border-radius: 4px;
+    max-width: 320px;
+    text-align: center;
+}
+
+.quote-block-text {
+    font-family: var(--font-chinese);
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-style: italic;
+    line-height: 2;
+    margin-bottom: 12px;
+}
+
+.quote-block-author {
+    font-family: var(--font-serif);
+    font-size: 0.75rem;
+    color: var(--color-amber);
+    letter-spacing: 2px;
+}
+
+/* ========== 9. 纪年 · 时间线 ========== */
+.timeline {
+    padding: var(--section-padding);
+    background: var(--color-ink);
+    position: relative;
+}
+
+.timeline-container {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.timeline-line {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(180deg, transparent, var(--color-amber) 10%, var(--color-amber) 90%, transparent);
+}
+
+.timeline-item {
+    position: relative;
+    width: 50%;
+    padding: 30px 50px;
+    margin-bottom: 20px;
+}
+
+.timeline-item[data-side="left"] {
+    left: 0;
+    text-align: right;
+}
+
+.timeline-item[data-side="right"] {
+    left: 50%;
+    text-align: left;
+}
+
+.timeline-dot {
+    position: absolute;
+    top: 40px;
+    width: 14px;
+    height: 14px;
+    background: var(--color-ink);
+    border: 2px solid var(--color-amber);
+    border-radius: 50%;
+    z-index: 2;
+    transition: var(--transition-smooth);
+}
+
+.timeline-item[data-side="left"] .timeline-dot {
+    right: -7px;
+}
+
+.timeline-item[data-side="right"] .timeline-dot {
+    left: -7px;
+}
+
+.timeline-item:hover .timeline-dot {
+    background: var(--color-amber);
+    box-shadow: 0 0 20px rgba(201, 169, 110, 0.5);
+}
+
+.timeline-dot-final {
+    background: var(--color-amber) !important;
+    box-shadow: 0 0 30px rgba(201, 169, 110, 0.6);
+    animation: finalPulse 2s ease-in-out infinite;
+}
+
+@keyframes finalPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(201, 169, 110, 0.4); }
+    50% { box-shadow: 0 0 40px rgba(201, 169, 110, 0.8); }
+}
+
+.timeline-card {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    padding: 30px;
+    border-radius: 6px;
+    transition: var(--transition-smooth);
+}
+
+.timeline-card:hover {
+    border-color: rgba(201, 169, 110, 0.4);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-luxury);
+}
+
+.timeline-card-final {
+    border-color: rgba(201, 169, 110, 0.4);
+    background: linear-gradient(135deg, rgba(201, 169, 110, 0.08), var(--glass-bg));
+}
+
+.timeline-year {
+    display: inline-block;
+    font-family: var(--font-serif);
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    color: var(--color-amber);
+    margin-bottom: 10px;
+    font-style: italic;
+}
+
+.timeline-title {
+    font-family: var(--font-chinese);
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--color-cream);
+    margin-bottom: 16px;
+    letter-spacing: 4px;
+}
+
+.timeline-text {
+    font-family: var(--font-chinese);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 2;
+    margin-bottom: 12px;
+    font-weight: 300;
+}
+
+.timeline-quote {
+    font-style: italic;
+    color: var(--color-amber-light);
+    font-size: 0.85rem;
+    padding-top: 10px;
+    border-top: 1px solid rgba(201, 169, 110, 0.15);
+}
+
+/* ========== 10. 藏香 · 香水系列 ========== */
+.collection {
+    padding: var(--section-padding);
+    background: linear-gradient(180deg, var(--color-ink) 0%, var(--color-ink-light) 100%);
+}
+
+.collection-intro {
+    text-align: center;
+    font-family: var(--font-chinese);
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 2;
+    margin-bottom: 70px;
+    font-weight: 300;
+}
+
+.perfume-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+}
+
+.perfume-card {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 40px 30px;
+    text-align: center;
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+}
+
+.perfume-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--color-amber), transparent);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.perfume-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(201, 169, 110, 0.4);
+    box-shadow: var(--shadow-luxury);
+}
+
+.perfume-card:hover::before {
+    transform: scaleX(1);
+}
+
+.perfume-bottle {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.bottle-cap-sm {
+    width: 24px;
+    height: 18px;
+    background: linear-gradient(180deg, var(--color-amber-light), var(--color-amber-deep));
+    margin: 0 auto;
+    border-radius: 3px 3px 0 0;
+}
+
+.bottle-body-sm {
+    width: 70px;
+    height: 110px;
+    margin: 0 auto;
+    border: 1px solid rgba(201, 169, 110, 0.3);
+    border-radius: 6px 6px 12px 12px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.bottle-num {
+    font-family: var(--font-serif);
+    font-size: 0.7rem;
+    color: var(--color-cream);
+    letter-spacing: 2px;
+    position: relative;
+    z-index: 2;
+}
+
+/* 不同香水液体颜色 */
+.liquid-amber { background: linear-gradient(180deg, rgba(201, 169, 110, 0.15), rgba(201, 169, 110, 0.4)); }
+.liquid-teal { background: linear-gradient(180deg, rgba(45, 90, 107, 0.2), rgba(27, 58, 75, 0.5)); }
+.liquid-rose { background: linear-gradient(180deg, rgba(166, 123, 123, 0.2), rgba(166, 123, 123, 0.45)); }
+.liquid-lavender { background: linear-gradient(180deg, rgba(155, 139, 181, 0.2), rgba(107, 91, 142, 0.5)); }
+.liquid-ink { background: linear-gradient(180deg, rgba(13, 27, 42, 0.4), rgba(8, 15, 26, 0.7)); }
+
+.perfume-name {
+    font-family: var(--font-chinese);
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--color-cream);
+    letter-spacing: 6px;
+    margin-bottom: 6px;
+}
+
+.perfume-english {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    color: var(--color-amber);
+    text-transform: uppercase;
+    font-style: italic;
+    margin-bottom: 20px;
+}
+
+.perfume-notes {
+    font-family: var(--font-chinese);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 2;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    letter-spacing: 1px;
+}
+
+.perfume-desc {
+    font-family: var(--font-chinese);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 2;
+    font-weight: 300;
+    font-style: italic;
+}
+
+/* ========== 11. 格拉斯 · 未赴之约 ========== */
+.grasse {
+    padding: var(--section-padding);
+    position: relative;
+    overflow: hidden;
+}
+
+.grasse-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(ellipse at 50% 30%, rgba(155, 139, 181, 0.15) 0%, transparent 60%),
+        linear-gradient(180deg, var(--color-ink-light) 0%, #1a1a2e 50%, var(--color-ink-deep) 100%);
+    z-index: 0;
+}
+
+.grasse-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.grasse-header {
+    margin-bottom: 60px;
+}
+
+.grasse-text p {
+    font-family: var(--font-chinese);
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 2.4;
+    margin-bottom: 24px;
+    font-weight: 300;
+}
+
+.grasse-highlight {
+    color: var(--color-lavender) !important;
+    font-style: italic;
+    font-size: 1.1rem !important;
+    padding: 30px;
+    background: rgba(155, 139, 181, 0.05);
+    border: 1px solid rgba(155, 139, 181, 0.2);
+    border-radius: 6px;
+    margin: 40px 0 !important;
+}
+
+/* 薰衣草装饰 */
+.grasse-lavender {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 50px;
+    height: 60px;
+    align-items: flex-end;
+}
+
+.lavender-stem {
+    width: 3px;
+    height: 40px;
+    background: linear-gradient(180deg, var(--color-lavender), var(--color-lavender-deep));
+    border-radius: 2px;
+    animation: lavenderSway 3s ease-in-out infinite;
+    transform-origin: bottom center;
+}
+
+.lavender-stem:nth-child(1) { height: 35px; animation-delay: 0s; }
+.lavender-stem:nth-child(2) { height: 50px; animation-delay: 0.2s; }
+.lavender-stem:nth-child(3) { height: 42px; animation-delay: 0.4s; }
+.lavender-stem:nth-child(4) { height: 55px; animation-delay: 0.6s; }
+.lavender-stem:nth-child(5) { height: 38px; animation-delay: 0.8s; }
+.lavender-stem:nth-child(6) { height: 48px; animation-delay: 1s; }
+.lavender-stem:nth-child(7) { height: 32px; animation-delay: 1.2s; }
+
+@keyframes lavenderSway {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+}
+
+/* ========== 12. 遗书 · 情感长文 ========== */
+.letter {
+    padding: var(--section-padding);
+    background: linear-gradient(180deg, var(--color-ink-deep) 0%, var(--color-ink) 100%);
+}
+
+.letter-container {
+    max-width: 850px;
+    margin: 0 auto;
+    width: 100%;
+    /* 防止入场动画的 rotate 导致手机端横向溢出 */
+    overflow: hidden;
+}
+
+.letter-paper {
+    background: linear-gradient(135deg, #f8f4ec 0%, #f0e8dc 100%);
+    padding: 70px 60px;
+    border-radius: 4px;
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.5),
+        0 0 60px rgba(201, 169, 110, 0.08),
+        inset 0 0 100px rgba(201, 169, 110, 0.05);
+    position: relative;
+    color: var(--text-dark);
+    /* 修复手机端溢出：确保信纸宽度不超过容器 */
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+/* 信纸纹理 */
+.letter-paper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 31px,
+            rgba(201, 169, 110, 0.08) 31px,
+            rgba(201, 169, 110, 0.08) 32px
+        );
+    pointer-events: none;
+    border-radius: 4px;
+}
+
+.letter-header-deco {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(168, 137, 79, 0.3);
+    position: relative;
+    z-index: 2;
+}
+
+.letter-date {
+    font-family: var(--font-serif);
+    font-size: 0.8rem;
+    color: var(--text-dark-secondary);
+    font-style: italic;
+    letter-spacing: 1px;
+}
+
+.letter-to {
+    font-family: var(--font-chinese);
+    font-size: 1.1rem;
+    color: var(--color-amber-deep);
+    letter-spacing: 4px;
+    font-weight: 500;
+}
+
+.letter-body {
+    position: relative;
+    z-index: 2;
+}
+
+.letter-body p {
+    font-family: var(--font-chinese);
+    font-size: 0.95rem;
+    color: #2a3a4a;
+    line-height: 2.3;
+    margin-bottom: 18px;
+    font-weight: 400;
+    text-align: justify;
+    text-indent: 2em;
+    /* 防止长文本在手机端溢出 */
+    overflow-wrap: break-word;
+    word-break: break-word;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+.letter-body p:first-child {
+    text-indent: 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--color-ink);
+    margin-bottom: 24px;
+}
+
+.letter-signoff {
+    text-align: right !important;
+    text-indent: 0 !important;
+    margin-top: 40px !important;
+    font-style: italic;
+    color: var(--color-amber-deep) !important;
+    line-height: 2 !important;
+}
+
+/* 火漆印 */
+.letter-footer-deco {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 40px;
+    position: relative;
+    z-index: 2;
+}
+
+.wax-seal {
+    width: 70px;
+    height: 70px;
+    background: radial-gradient(circle at 35% 35%, #c44536, #8b2519 60%, #6b1a12);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+        0 4px 12px rgba(139, 37, 25, 0.4),
+        inset 0 -2px 6px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.2);
+    transform: rotate(-5deg);
+}
+
+.seal-text {
+    font-family: var(--font-chinese);
+    font-size: 0.85rem;
+    color: rgba(255, 240, 230, 0.9);
+    letter-spacing: 2px;
+    font-weight: 500;
+}
+
+/* ========== 13. 尾声 ========== */
+.epilogue {
+    padding: 100px 0;
+    background: var(--color-ink-deep);
+    text-align: center;
+}
+
+.epilogue-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.epilogue-quote {
+    font-family: var(--font-chinese);
+    font-size: 1.2rem;
+    color: var(--color-amber-light);
+    line-height: 2.5;
+    font-weight: 300;
+    font-style: italic;
+    margin-bottom: 40px;
+    letter-spacing: 2px;
+}
+
+.epilogue-text {
+    font-family: var(--font-chinese);
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 2.5;
+    margin-bottom: 50px;
+    font-weight: 300;
+}
+
+.epilogue-sign {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.epilogue-sign span {
+    font-family: var(--font-serif);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 3px;
+}
+
+.epilogue-sign span:last-child {
+    color: var(--color-amber);
+    font-family: var(--font-chinese);
+    letter-spacing: 4px;
+}
+
+/* ========== 14. 页脚 ========== */
+.footer {
+    background: #050a12;
+    padding: 60px 0 30px;
+    border-top: 1px solid rgba(201, 169, 110, 0.1);
+}
+
+.footer-container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.footer-brand {
+    text-align: center;
+    margin-bottom: 50px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid rgba(201, 169, 110, 0.1);
+}
+
+.footer-logo {
+    font-family: var(--font-chinese);
+    font-size: 1.3rem;
+    color: var(--color-cream);
+    letter-spacing: 6px;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.footer-tagline {
+    font-family: var(--font-chinese);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    line-height: 1.8;
+}
+
+.footer-links {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 60px;
+    margin-bottom: 40px;
+}
+
+.footer-col h4 {
+    font-family: var(--font-chinese);
+    font-size: 0.9rem;
+    color: var(--color-amber);
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+    font-weight: 400;
+}
+
+.footer-col a, .footer-col span {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+    line-height: 1.8;
+}
+
+.footer-col a:hover {
+    color: var(--color-amber-light);
+}
+
+.footer-bottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    padding-top: 30px;
+    border-top: 1px solid rgba(201, 169, 110, 0.08);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+}
+
+.icp-number a {
+    color: var(--text-muted);
+    transition: var(--transition-fast);
+}
+
+.icp-number a:hover {
+    color: var(--color-amber);
+}
+
+/* ========== 15. 返回顶部按钮 ========== */
+.back-to-top {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    width: 48px;
+    height: 48px;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 50%;
+    color: var(--color-amber);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition-smooth);
+    z-index: 99;
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.back-to-top:hover {
+    background: var(--color-amber);
+    color: var(--color-ink);
+    border-color: var(--color-amber);
+    transform: translateY(-4px);
+}
+
+/* ========== 16. 滚动揭示动画 ========== */
+.reveal {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+/* 当JS成功加载并初始化后，通过添加 .reveal-init 类来启用隐藏-揭示效果 */
+.reveal-init .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+}
+
+.reveal-init .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 不同延迟 */
+.perfume-card:nth-child(1) { transition-delay: 0s; }
+.perfume-card:nth-child(2) { transition-delay: 0.1s; }
+.perfume-card:nth-child(3) { transition-delay: 0.2s; }
+.perfume-card:nth-child(4) { transition-delay: 0.3s; }
+.perfume-card:nth-child(5) { transition-delay: 0.4s; }
+
+/* ========== 17. 响应式设计 ========== */
+@media (max-width: 1024px) {
+    .hero-title {
+        font-size: 3.5rem;
+        letter-spacing: 8px;
+    }
+    .hero-perfume-deco {
+        display: none;
+    }
+    .prologue-content {
+        grid-template-columns: 1fr;
+        gap: 50px;
+    }
+    .footer-links {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --section-padding: 80px 0;
+    }
+    .section-container {
+        padding: 0 24px;
+    }
+    .section-title {
+        font-size: 1.8rem;
+        letter-spacing: 3px;
+    }
+    .nav-menu {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: var(--color-ink-deep);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+        z-index: 99;
+    }
+    .nav-menu.active {
+        display: flex;
+    }
+    .nav-toggle {
+        display: flex;
+        z-index: 100;
+    }
+    .hero-title {
+        font-size: 2.5rem;
+        letter-spacing: 6px;
+        gap: 12px;
+    }
+    .title-divider {
+        font-size: 1.5rem;
+    }
+    .hero-credits {
+        flex-direction: column;
+        gap: 24px;
+    }
+    .credit-divider {
+        transform: rotate(90deg);
+    }
+    .quote-text {
+        font-size: 0.95rem;
+    }
+    /* 时间线移动端：全部左对齐 */
+    .timeline-line {
+        left: 20px;
+    }
+    .timeline-item {
+        width: 100%;
+        left: 0 !important;
+        text-align: left !important;
+        padding: 20px 20px 20px 50px;
+    }
+    .timeline-item .timeline-dot {
+        left: 13px !important;
+        right: auto !important;
+    }
+    .letter-paper {
+        padding: 36px 20px;
+    }
+    .letter-header-deco {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+    .letter-body p {
+        font-size: 0.88rem;
+        line-height: 2.0;
+        /* 手机端改用左对齐，避免 justify 在窄屏上造成字间距过大或渲染异常 */
+        text-align: left;
+    }
+    /* 手机端缩小信纸内框装饰，避免与文字重叠 */
+    .letter-paper::after {
+        top: 12px;
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+    }
+    .perfume-grid {
+        grid-template-columns: 1fr;
+    }
+    .footer-bottom {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+    .back-to-top {
+        bottom: 24px;
+        right: 24px;
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2rem;
+        letter-spacing: 4px;
+    }
+    .section-title {
+        font-size: 1.5rem;
+    }
+    .credit-name {
+        font-size: 1.2rem;
+        letter-spacing: 6px;
+    }
+    .epilogue-quote {
+        font-size: 1rem;
+    }
+    /* 超小屏幕进一步缩小信纸张内边距 */
+    .section-container {
+        padding: 0 16px;
+    }
+    .letter-paper {
+        padding: 28px 16px;
+    }
+    .letter-body p {
+        font-size: 0.82rem;
+        line-height: 1.95;
+        margin-bottom: 14px;
+    }
+    .letter-body p:first-child {
+        font-size: 1rem;
+    }
+    .letter-to {
+        font-size: 1rem;
+        letter-spacing: 3px;
+    }
+    .wax-seal {
+        width: 56px;
+        height: 56px;
+    }
+    .seal-text {
+        font-size: 0.9rem !important;
+    }
+    .letter-paper::after {
+        top: 8px;
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+    }
+    /* 防止固定宽度元素在超小屏幕溢出 */
+    .prologue-quote-block {
+        max-width: 100%;
+        padding: 24px 20px;
+    }
+    .scent-paper {
+        width: 160px;
+        height: 240px;
+    }
+    .paper-strip {
+        width: 42px;
+        height: 180px;
+    }
+    /* 香水网格在超小屏幕确保不溢出 */
+    .perfume-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .perfume-card {
+        padding: 30px 20px;
+    }
+    /* 时间线在超小屏幕调整内边距 */
+    .timeline-item {
+        padding: 16px 16px 16px 44px;
+    }
+    /* 导航栏logo缩小 */
+    .nav-logo {
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+    }
+    /* 英文副标题防溢出 */
+    .hero-subtitle {
+        font-size: 0.85rem;
+        letter-spacing: 2px;
+    }
+    /* 所有元素最大宽度不超过视口 */
+    img, video, canvas, svg {
+        max-width: 100%;
+    }
+}
+
+/* ============================================================
+   ★ 奢华增强样式 ★
+   ============================================================ */
+
+/* ========== 18. 金色尘埃画布 ========== */
+.gold-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0.7;
+}
+
+/* ========== 19. 鼠标跟随光晕 ========== */
+.cursor-glow {
+    position: fixed;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201, 169, 110, 0.08) 0%, rgba(201, 169, 110, 0.03) 30%, transparent 70%);
+    pointer-events: none;
+    z-index: 2;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s ease;
+    mix-blend-mode: screen;
+}
+
+/* ========== 20. 全局奢华增强 ========== */
+
+/* 页面顶部金色微光渐变 */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 300px;
+    background: linear-gradient(180deg, rgba(201, 169, 110, 0.04) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* 标题金色流光效果 */
+.section-title {
+    background: linear-gradient(
+        135deg,
+        var(--color-cream) 0%,
+        var(--color-amber-light) 25%,
+        var(--color-cream) 50%,
+        var(--color-amber-light) 75%,
+        var(--color-cream) 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: titleShimmer 6s linear infinite;
+    text-shadow: none;
+    filter: drop-shadow(0 0 20px rgba(201, 169, 110, 0.15));
+}
+
+@keyframes titleShimmer {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+
+/* 英雄区主标题增强 */
+.hero-title .title-line {
+    text-shadow:
+        0 0 40px rgba(201, 169, 110, 0.2),
+        0 0 80px rgba(201, 169, 110, 0.1);
+}
+
+.hero-title .title-divider {
+    text-shadow: 0 0 30px rgba(201, 169, 110, 0.5);
+    animation: dividerGlow 3s ease-in-out infinite;
+}
+
+@keyframes dividerGlow {
+    0%, 100% { text-shadow: 0 0 20px rgba(201, 169, 110, 0.3); }
+    50% { text-shadow: 0 0 40px rgba(201, 169, 110, 0.6), 0 0 60px rgba(201, 169, 110, 0.3); }
+}
+
+/* 章节编号增强 */
+.section-number {
+    text-shadow: 0 0 20px rgba(201, 169, 110, 0.4);
+    position: relative;
+}
+
+.section-number::before,
+.section-number::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-amber), transparent);
+}
+
+.section-number::before { right: calc(50% + 30px); }
+.section-number::after { left: calc(50% + 30px); transform: scaleX(-1); }
+
+/* ========== 21. 导航栏增强 ========== */
+.navbar.scrolled {
+    background: rgba(8, 15, 26, 0.85);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(201, 169, 110, 0.15);
+}
+
+.navbar.scrolled::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    width: 80%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201, 169, 110, 0.4), transparent);
+}
+
+.nav-link {
+    position: relative;
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: var(--color-amber);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    box-shadow: 0 0 8px rgba(201, 169, 110, 0.6);
+}
+
+.nav-link:hover::before {
+    opacity: 1;
+}
+
+.logo-chinese {
+    text-shadow: 0 0 20px rgba(201, 169, 110, 0.2);
+}
+
+/* ========== 22. 英雄区增强 ========== */
+.hero-bg-layer {
+    background:
+        radial-gradient(ellipse at 20% 30%, rgba(201, 169, 110, 0.06) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 70%, rgba(155, 139, 181, 0.05) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 50%, rgba(27, 58, 75, 0.3) 0%, transparent 60%),
+        linear-gradient(180deg, var(--color-ink-deep) 0%, var(--color-ink) 50%, var(--color-ink-light) 100%);
+}
+
+/* 英雄区四角装饰 */
+.hero::before,
+.hero::after {
+    content: '';
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border: 1px solid rgba(201, 169, 110, 0.2);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.hero::before {
+    top: 100px;
+    left: 40px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.hero::after {
+    bottom: 40px;
+    right: 40px;
+    border-left: none;
+    border-top: none;
+}
+
+.hero-tag .tag-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-amber), transparent);
+    box-shadow: 0 0 10px rgba(201, 169, 110, 0.3);
+}
+
+.quote-text {
+    text-shadow: 0 0 30px rgba(201, 169, 110, 0.1);
+}
+
+.credit-name {
+    text-shadow: 0 0 20px rgba(245, 240, 232, 0.1);
+}
+
+.credit-role {
+    text-shadow: 0 0 15px rgba(201, 169, 110, 0.3);
+}
+
+/* ========== 23. 英雄区香水瓶增强 ========== */
+.hero-perfume-deco {
+    opacity: 0.2;
+    filter: drop-shadow(0 0 30px rgba(201, 169, 110, 0.3));
+}
+
+.bottle-body {
+    background: linear-gradient(135deg, rgba(201, 169, 110, 0.15), rgba(27, 58, 75, 0.4));
+    box-shadow:
+        inset 0 0 30px rgba(201, 169, 110, 0.05),
+        0 0 40px rgba(201, 169, 110, 0.1);
+}
+
+/* 香水瓶液体波纹 */
+.bottle-liquid-fill {
+    overflow: hidden;
+}
+
+.liquid-wave {
+    position: absolute;
+    top: -8px;
+    left: -50%;
+    width: 200%;
+    height: 16px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120'%3E%3Cpath fill='rgba(201,169,110,0.3)' d='M0,60 C150,100 350,0 600,60 C850,120 1050,20 1200,60 L1200,120 L0,120 Z'/%3E%3C/svg%3E") repeat-x;
+    background-size: 50% 100%;
+    animation: waveMove 4s linear infinite;
+}
+
+@keyframes waveMove {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* 香水瓶气泡 */
+.bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), rgba(201, 169, 110, 0.1));
+    animation: bubbleRise 3s ease-in infinite;
+}
+
+.bubble.b1 { width: 6px; height: 6px; left: 20%; animation-delay: 0s; }
+.bubble.b2 { width: 4px; height: 4px; left: 50%; animation-delay: 1s; }
+.bubble.b3 { width: 5px; height: 5px; left: 70%; animation-delay: 2s; }
+
+@keyframes bubbleRise {
+    0% { bottom: 10%; opacity: 0; transform: translateY(0); }
+    20% { opacity: 0.8; }
+    100% { bottom: 80%; opacity: 0; transform: translateY(-20px); }
+}
+
+/* 香水瓶高光 */
+.bottle-shine {
+    position: absolute;
+    top: 10%;
+    left: 15%;
+    width: 15%;
+    height: 60%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.15), transparent);
+    border-radius: 50%;
+    transform: rotate(-10deg);
+    pointer-events: none;
+}
+
+/* ========== 24. 缘起区增强 ========== */
+.prologue {
+    position: relative;
+}
+
+.prologue::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201, 169, 110, 0.3), transparent);
+}
+
+.prologue-lead {
+    text-shadow: 0 0 30px rgba(245, 240, 232, 0.1);
+}
+
+.prologue-highlight {
+    text-shadow: 0 0 20px rgba(201, 169, 110, 0.15);
+    position: relative;
+}
+
+.prologue-highlight::before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--color-amber), transparent);
+    box-shadow: 0 0 10px rgba(201, 169, 110, 0.4);
+}
+
+/* 试香纸增强 */
+.paper-strip {
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(201, 169, 110, 0.08);
+    transition: transform 0.5s ease;
+}
+
+.scent-paper:hover .paper-strip {
+    transform: rotate(-3deg) translateY(-5px);
+}
+
+/* 引言玻璃卡增强 */
+.prologue-quote-block {
+    position: relative;
+    box-shadow: var(--shadow-luxury);
+    overflow: hidden;
+}
+
+.prologue-quote-block::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(201, 169, 110, 0.08), transparent);
+    animation: lightSweep 5s ease-in-out infinite;
+}
+
+@keyframes lightSweep {
+    0%, 100% { left: -100%; }
+    50% { left: 100%; }
+}
+
+/* ========== 25. 时间线增强 ========== */
+.timeline-line {
+    width: 1px;
+    background: linear-gradient(180deg,
+        transparent 0%,
+        rgba(201, 169, 110, 0.3) 5%,
+        var(--color-amber) 50%,
+        rgba(201, 169, 110, 0.3) 95%,
+        transparent 100%
+    );
+    box-shadow: 0 0 10px rgba(201, 169, 110, 0.2);
+}
+
+.timeline-dot {
+    box-shadow: 0 0 0 4px rgba(201, 169, 110, 0.1);
+}
+
+.timeline-item:hover .timeline-dot {
+    box-shadow: 0 0 0 6px rgba(201, 169, 110, 0.15), 0 0 25px rgba(201, 169, 110, 0.6);
+    transform: scale(1.2);
+}
+
+.timeline-card {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.timeline-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(201, 169, 110, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.timeline-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(201, 169, 110, 0.06), transparent);
+    transition: left 0.6s ease;
+    pointer-events: none;
+}
+
+.timeline-card:hover::after {
+    left: 100%;
+}
+
+.timeline-card:hover {
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(201, 169, 110, 0.1);
+}
+
+.timeline-title {
+    text-shadow: 0 0 20px rgba(245, 240, 232, 0.08);
+}
+
+.timeline-quote {
+    text-shadow: 0 0 15px rgba(201, 169, 110, 0.1);
+}
+
+/* ========== 26. 香水卡片增强 ========== */
+.perfume-card {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* 卡片光扫效果 */
+.perfume-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 40%,
+        rgba(201, 169, 110, 0.06) 50%,
+        transparent 60%
+    );
+    transform: translateX(-100%);
+    transition: transform 0.8s ease;
+    pointer-events: none;
+}
+
+.perfume-card:hover::after {
+    transform: translateX(100%);
+}
+
+.perfume-card:hover {
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.5),
+        0 0 50px rgba(201, 169, 110, 0.12);
+    border-color: rgba(201, 169, 110, 0.3);
+}
+
+/* 小香水瓶液体波纹 */
+.sm-liquid-wave {
+    position: absolute;
+    top: -6px;
+    left: -50%;
+    width: 200%;
+    height: 12px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120'%3E%3Cpath fill='rgba(255,255,255,0.15)' d='M0,60 C150,100 350,0 600,60 C850,120 1050,20 1200,60 L1200,120 L0,120 Z'/%3E%3C/svg%3E") repeat-x;
+    background-size: 50% 100%;
+    animation: waveMove 3s linear infinite;
+    z-index: 1;
+}
+
+/* 小香水瓶高光 */
+.sm-bottle-shine {
+    position: absolute;
+    top: 8%;
+    left: 18%;
+    width: 12%;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.2), transparent);
+    border-radius: 50%;
+    transform: rotate(-10deg);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.bottle-body-sm {
+    box-shadow:
+        inset 0 0 20px rgba(0, 0, 0, 0.2),
+        0 5px 20px rgba(0, 0, 0, 0.3);
+    transition: box-shadow 0.4s ease;
+}
+
+.perfume-card:hover .bottle-body-sm {
+    box-shadow:
+        inset 0 0 20px rgba(0, 0, 0, 0.2),
+        0 5px 30px rgba(201, 169, 110, 0.2);
+}
+
+.bottle-cap-sm {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.perfume-name {
+    text-shadow: 0 0 20px rgba(245, 240, 232, 0.08);
+}
+
+.perfume-english {
+    text-shadow: 0 0 15px rgba(201, 169, 110, 0.2);
+}
+
+.perfume-notes {
+    border: 1px solid rgba(201, 169, 110, 0.08);
+    background: rgba(0, 0, 0, 0.25);
+}
+
+/* ========== 27. 格拉斯区增强 ========== */
+.grasse-bg {
+    background:
+        radial-gradient(ellipse at 50% 20%, rgba(155, 139, 181, 0.18) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 80%, rgba(201, 169, 110, 0.05) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 80%, rgba(155, 139, 181, 0.1) 0%, transparent 40%),
+        linear-gradient(180deg, var(--color-ink-light) 0%, #1a1a2e 50%, var(--color-ink-deep) 100%);
+}
+
+.grasse-highlight {
+    box-shadow:
+        0 10px 40px rgba(107, 91, 142, 0.15),
+        inset 0 0 30px rgba(155, 139, 181, 0.03);
+    text-shadow: 0 0 20px rgba(155, 139, 181, 0.2);
+}
+
+.lavender-stem {
+    box-shadow: 0 0 10px rgba(155, 139, 181, 0.3);
+}
+
+/* ========== 28. 信纸增强 ========== */
+.letter-paper {
+    position: relative;
+    box-shadow:
+        0 40px 100px rgba(0, 0, 0, 0.6),
+        0 0 80px rgba(201, 169, 110, 0.1),
+        inset 0 0 120px rgba(201, 169, 110, 0.04);
+}
+
+/* 信纸四角装饰 */
+.letter-paper::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    border: 1px solid rgba(168, 137, 79, 0.12);
+    pointer-events: none;
+    border-radius: 2px;
+}
+
+/* 火漆印增强 */
+.wax-seal {
+    box-shadow:
+        0 6px 20px rgba(139, 37, 25, 0.5),
+        0 0 30px rgba(196, 69, 54, 0.2),
+        inset 0 -3px 8px rgba(0, 0, 0, 0.4),
+        inset 0 3px 6px rgba(255, 255, 255, 0.25);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    cursor: default;
+}
+
+.wax-seal:hover {
+    transform: rotate(-5deg) scale(1.1);
+    box-shadow:
+        0 8px 30px rgba(139, 37, 25, 0.6),
+        0 0 50px rgba(196, 69, 54, 0.3),
+        inset 0 -3px 8px rgba(0, 0, 0, 0.4),
+        inset 0 3px 6px rgba(255, 255, 255, 0.25);
+}
+
+.seal-text {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.letter-to {
+    text-shadow: 0 0 15px rgba(168, 137, 79, 0.2);
+}
+
+/* ========== 29. 尾声增强 ========== */
+.epilogue {
+    position: relative;
+}
+
+.epilogue::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201, 169, 110, 0.3), transparent);
+}
+
+.epilogue-quote {
+    text-shadow: 0 0 40px rgba(201, 169, 110, 0.15);
+}
+
+/* ========== 30. 页脚增强 ========== */
+.footer {
+    background: linear-gradient(180deg, #050a12 0%, #020508 100%);
+    position: relative;
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201, 169, 110, 0.3), transparent);
+}
+
+.footer-logo {
+    text-shadow: 0 0 20px rgba(201, 169, 110, 0.15);
+}
+
+/* ========== 31. 返回顶部增强 ========== */
+.back-to-top {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.back-to-top.visible {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 20px rgba(201, 169, 110, 0.15);
+}
+
+.back-to-top:hover {
+    box-shadow: 0 6px 30px rgba(201, 169, 110, 0.4);
+}
+
+/* ========== 32. 加载动画增强 ========== */
+.loader {
+    background: radial-gradient(ellipse at center, var(--color-ink) 0%, var(--color-ink-deep) 100%);
+}
+
+.loader::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201, 169, 110, 0.06) 0%, transparent 70%);
+    animation: loaderGlow 2s ease-in-out infinite;
+}
+
+@keyframes loaderGlow {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+    50% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+}
+
+.bottle-liquid {
+    box-shadow: 0 0 20px rgba(201, 169, 110, 0.2);
+}
+
+.loader-progress {
+    box-shadow: 0 0 10px rgba(201, 169, 110, 0.5);
+}
+
+.loader-text {
+    text-shadow: 0 0 20px rgba(201, 169, 110, 0.2);
+}
+
+/* ========== 33. 滚动条增强 ========== */
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--color-amber-deep), var(--color-amber), var(--color-amber-light));
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(201, 169, 110, 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--color-amber), var(--color-amber-light));
+}
+
+/* ========== 34. 选中文本增强 ========== */
+::selection {
+    background: rgba(201, 169, 110, 0.4);
+    color: var(--color-cream);
+    text-shadow: 0 0 10px rgba(201, 169, 110, 0.3);
+}
+
+/* ========== 35. 滚动指示器增强 ========== */
+.scroll-line {
+    box-shadow: 0 0 10px rgba(201, 169, 110, 0.4);
+}
+
+/* ========== 36. 移动端隐藏鼠标光晕 ========== */
+@media (hover: none) {
+    .cursor-glow { display: none; }
+    .gold-canvas { opacity: 0.4; }
+}
+
+@media (max-width: 768px) {
+    .hero::before, .hero::after { display: none; }
+    .section-number::before, .section-number::after { width: 20px; }
+    .section-number::before { right: calc(50% + 20px); }
+    .section-number::after { left: calc(50% + 20px); }
+    .cursor-glow { display: none; }
+}
+
+/* ============================================================
+   ★ 第三轮增强：音乐播放器 / 滚动进度条 / 细节美化 ★
+   ============================================================ */
+
+/* ========== 37. 顶部滚动进度条 ========== */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--color-amber-deep), var(--color-amber-light), var(--color-gold));
+    z-index: 10000;
+    box-shadow: 0 0 10px rgba(201, 169, 110, 0.6), 0 0 20px rgba(201, 169, 110, 0.3);
+    transition: width 0.1s linear;
+    pointer-events: none;
+}
+
+/* ========== 38. 音乐播放器（黑胶唱片） ========== */
+.music-player {
+    position: fixed;
+    bottom: 32px;
+    left: 32px;
+    z-index: 900;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    background: rgba(13, 27, 42, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 8px 14px 8px 8px;
+    border-radius: 40px;
+    border: 1px solid rgba(201, 169, 110, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* 黑胶唱片本体 */
+.vinyl-record {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at center, #1a1a1a 0%, #0d0d0d 30%, #1a1a1a 32%, #0a0a0a 50%, #1a1a1a 52%, #0d0d0d 70%, #050505 100%);
+    position: relative;
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(201, 169, 110, 0.15),
+        inset 0 0 20px rgba(0, 0, 0, 0.8);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    flex-shrink: 0;
+}
+
+/* 唱片纹路 */
+.vinyl-grooves {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85%;
+    height: 85%;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    box-shadow:
+        inset 0 0 0 4px transparent,
+        inset 0 0 0 5px rgba(255, 255, 255, 0.02),
+        inset 0 0 0 10px transparent,
+        inset 0 0 0 11px rgba(255, 255, 255, 0.02),
+        inset 0 0 0 16px transparent,
+        inset 0 0 0 17px rgba(255, 255, 255, 0.015);
+    pointer-events: none;
+}
+
+/* 唱片中心标签 */
+.vinyl-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-amber-deep), var(--color-amber) 50%, var(--color-amber-light));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 8px rgba(201, 169, 110, 0.4);
+    pointer-events: none;
+}
+
+.vinyl-title {
+    font-family: var(--font-chinese);
+    font-size: 7px;
+    color: var(--color-ink-deep);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 1px;
+}
+
+.vinyl-artist {
+    font-family: var(--font-serif);
+    font-size: 5px;
+    color: rgba(8, 15, 26, 0.7);
+    line-height: 1;
+    margin-top: 1px;
+    letter-spacing: 0.5px;
+}
+
+/* 唱片中心孔 */
+.vinyl-hole {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #050505;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+    z-index: 2;
+}
+
+/* 播放/暂停按钮 */
+.music-toggle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(13, 27, 42, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(201, 169, 110, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-amber-light);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    flex-shrink: 0;
+}
+
+.music-player:hover .music-toggle {
+    background: rgba(201, 169, 110, 0.15);
+    border-color: var(--color-amber);
+    color: var(--color-amber-light);
+    box-shadow: 0 0 20px rgba(201, 169, 110, 0.2);
+}
+
+.music-player:hover .vinyl-record {
+    box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(201, 169, 110, 0.3),
+        0 0 30px rgba(201, 169, 110, 0.15),
+        inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+/* 播放时黑胶旋转 */
+.music-player.playing .vinyl-record {
+    animation: vinylSpin 4s linear infinite;
+}
+
+@keyframes vinylSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* 歌曲信息（桌面端显示） */
+.music-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    padding-right: 6px;
+    line-height: 1.2;
+}
+.music-info-title {
+    font-family: var(--font-chinese);
+    font-size: 0.78rem;
+    color: var(--color-cream);
+    letter-spacing: 1px;
+}
+.music-info-artist {
+    font-family: var(--font-serif);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+}
+
+/* 播放时的声波涟漪 */
+.music-ripple {
+    position: absolute;
+    top: 50%;
+    left: 28px;
+    transform: translateY(-50%);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 1px solid rgba(201, 169, 110, 0.3);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.music-player.playing .music-ripple {
+    animation: musicRipple 2s ease-out infinite;
+}
+
+@keyframes musicRipple {
+    0% {
+        transform: translateY(-50%) scale(1);
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateY(-50%) scale(1.8);
+        opacity: 0;
+    }
+}
+
+/* 暂停图标默认隐藏，播放时显示；播放图标反之 */
+.icon-pause { display: none; }
+.music-player.playing .icon-play { display: none; }
+.music-player.playing .icon-pause { display: block; }
+
+/* ========== 39. 首次进入音乐提示 ========== */
+.music-hint {
+    position: fixed;
+    bottom: 110px;
+    left: 32px;
+    z-index: 899;
+    background: rgba(13, 27, 42, 0.85);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(201, 169, 110, 0.25);
+    border-radius: 8px;
+    padding: 16px 20px;
+    color: var(--text-primary);
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 40px rgba(201, 169, 110, 0.08);
+    opacity: 0;
+    transform: translateY(10px);
+    animation: hintFadeIn 1s ease 2s forwards;
+    pointer-events: none;
+    max-width: 220px;
+}
+
+.music-hint.fade-out {
+    animation: hintFadeOut 0.6s ease forwards;
+}
+
+@keyframes hintFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes hintFadeOut {
+    to {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+.music-hint-icon {
+    font-size: 1.5rem;
+    color: var(--color-amber);
+    margin-bottom: 8px;
+    animation: noteFloat 2s ease-in-out infinite;
+}
+
+@keyframes noteFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+.music-hint p {
+    font-family: var(--font-chinese);
+    font-size: 0.85rem;
+    color: var(--color-cream);
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+}
+
+.music-hint span {
+    font-family: var(--font-serif);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-style: italic;
+    letter-spacing: 0.5px;
+}
+
+/* ========== 40. 手机端音乐播放器适配 ========== */
+@media (max-width: 768px) {
+    .music-player {
+        bottom: 20px;
+        left: 20px;
+        gap: 10px;
+    }
+    .vinyl-record {
+        width: 48px;
+        height: 48px;
+    }
+    .vinyl-label {
+        width: 22px;
+        height: 22px;
+    }
+    .vinyl-title { font-size: 6px; }
+    .music-toggle {
+        width: 32px;
+        height: 32px;
+    }
+    .music-ripple {
+        left: 24px;
+        width: 48px;
+        height: 48px;
+    }
+    .music-hint {
+        bottom: 88px;
+        left: 20px;
+        padding: 12px 16px;
+        max-width: 180px;
+    }
+    .music-hint p { font-size: 0.78rem; }
+    .music-hint span { font-size: 0.65rem; }
+    .music-info { display: none; }
+}
+
+/* ========== 41. 章节分隔线增强 ========== */
+.section-container {
+    position: relative;
+}
+
+/* 为每个 section 添加顶部金色微光分隔 */
+.section {
+    position: relative;
+}
+
+.section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201, 169, 110, 0.3), transparent);
+    pointer-events: none;
+}
+
+/* 首屏不需要分隔线 */
+#hero::before {
+    display: none;
+}
+
+/* ========== 42. 导航栏音乐按钮提示 ========== */
+.nav-music-hint {
+    display: none;
+}
+
+/* ========== 43. 减少动画偏好 ========== */
+@media (prefers-reduced-motion: reduce) {
+    .music-player.playing .vinyl-record {
+        animation: none;
+    }
+    .music-player.playing .music-ripple {
+        animation: none;
+    }
+    .music-hint {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+    .music-hint-icon {
+        animation: none;
+    }
+}
+
+/* ========== 44. 信纸张阅读进度提示（手机端） ========== */
+@media (max-width: 768px) {
+    /* 信纸在手机端增加微妙的左右渐隐，暗示可滚动 */
+    .letter-paper {
+        -webkit-mask-image: linear-gradient(
+            to bottom,
+            black 0%,
+            black 98%,
+            transparent 100%
+        );
+        mask-image: linear-gradient(
+            to bottom,
+            black 0%,
+            black 98%,
+            transparent 100%
+        );
+    }
+    /* 为固定音乐播放器留出底部空间，避免遮挡页脚 */
+    body {
+        padding-bottom: 100px;
+    }
+    .footer {
+        padding-bottom: 40px;
+    }
+}
+
+/* ========== 45. 音乐提示关闭按钮 ========== */
+.music-hint-close {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    width: 18px;
+    height: 18px;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    font-size: 12px;
+    line-height: 1;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+.music-hint-close:hover {
+    background: rgba(201, 169, 110, 0.3);
+    color: var(--color-amber-light);
+}
